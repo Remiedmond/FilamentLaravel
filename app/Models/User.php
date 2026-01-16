@@ -54,4 +54,9 @@ class User extends Authenticatable
     {
         return $this->role === 'employee';
     }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
 }
