@@ -7,6 +7,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Select;
 use Filament\Schemas\Schema;
 
 class EventForm
@@ -15,9 +16,16 @@ class EventForm
     {
         return $schema
             ->components([
-                TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
+                // CHAMP AJOUTÉ ICI :
+                Select::make('user_id')
+                    ->label('Chef de Projet (Responsable)')
+                    ->relationship('user', 'name') // Affiche le nom de l'utilisateur
+                    ->searchable()
+                    ->preload()
+                    ->default(auth()->id())
+                    ->disabled(! auth()->user()->isAdmin()) // Seul l'admin peut le modifier
+                    ->visible(auth()->user()->isAdmin()), // Seul l'admin le voit
+
                 TextInput::make('title')
                     ->required(),
                 TextInput::make('slug')
@@ -30,6 +38,8 @@ class EventForm
                 TextInput::make('location')
                     ->required(),
                 FileUpload::make('cover_image')
+                    ->disk('public')
+                    ->directory('events')
                     ->image(),
                 TextInput::make('max_participants')
                     ->numeric(),

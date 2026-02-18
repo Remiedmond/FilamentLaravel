@@ -18,6 +18,20 @@ class EventResource extends Resource
 {
     protected static ?string $model = Event::class;
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $user = auth()->user();
+        $query = parent::getEloquentQuery();
+
+        // Seul l'admin voit tout.
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        // Sinon (chef de projet), il ne voit que ses propres événements.
+        return $query->where('user_id', $user->id);
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'title';
@@ -34,8 +48,9 @@ class EventResource extends Resource
 
     public static function getRelations(): array
     {
+
         return [
-            //
+            RelationManagers\RegistrationsRelationManager::class,
         ];
     }
 

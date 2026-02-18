@@ -19,12 +19,17 @@ class Event extends Model
         'location',
         'cover_image',
         'max_participants',
-        'max_participants_per_user',
+        'max_guests_per_registration',
         'is_public',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function registrations()
+    {
+        return $this->hasMany(Registration::class);
     }
 }

@@ -53,7 +53,7 @@ class User extends Authenticatable implements FilamentUser
     {
         // On utilise votre méthode existante isAdmin()
         // Seuls les utilisateurs avec le rôle 'admin' pourront se connecter.
-        return $this->isAdmin();
+        return $this->isAdmin()|| $this->role === 'employee';;
     }
 
     public function isAdmin(): bool

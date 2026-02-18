@@ -2,13 +2,11 @@
 
 namespace App\Filament\Resources\Events\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Columns\TextColumn;
+use App\Models\Event;
+use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\TextColumn;
+
 
 class EventsTable
 {
@@ -16,49 +14,29 @@ class EventsTable
     {
         return $table
             ->columns([
-                TextColumn::make('user_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('title')
+                    ->label('Titre')
+                    ->searchable()
                     ->sortable(),
-                TextColumn::make('title')
-                    ->searchable(),
-                TextColumn::make('slug')
-                    ->searchable(),
-                TextColumn::make('date-start')
-                    ->dateTime()
+                Tables\Columns\TextColumn::make('location')
+                    ->label('Lieu'),
+                Tables\Columns\TextColumn::make('start_date')
+                    ->label('Date')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable(),
-                TextColumn::make('date-end')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('location')
-                    ->searchable(),
-                ImageColumn::make('cover_image'),
-                TextColumn::make('max_participants')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('max_guests_per_registration')
-                    ->numeric()
-                    ->sortable(),
-                IconColumn::make('is_public')
+                Tables\Columns\IconColumn::make('is_public')
+                    ->label('Public')
                     ->boolean(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('user.name')
+                ->label('Chef de Projet')
+                ->sortable()
+                ->visible(fn () => auth()->user()->isAdmin()),
             ])
-            ->filters([
-                //
+            ->actions([
+                // On vide les actions pour éviter l'erreur de classe introuvable
             ])
-            ->recordActions([
-                EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+            ->bulkActions([
+                // On vide également les actions groupées
             ]);
     }
 }

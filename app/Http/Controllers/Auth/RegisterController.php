@@ -28,4 +28,18 @@ class RegisterController extends Controller
     public function show() {
         return view('auth.register');
     }
+
+    public function store(Request $request, \App\Models\Event $event)
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email',
+        'additional_guests' => 'required|integer|min:0|max:2',
+        'allergies' => 'nullable|string',
+    ]);
+
+    $event->registrations()->create($validated);
+
+    return back()->with('success', 'Votre inscription a bien été prise en compte !');
+}
 }
