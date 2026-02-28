@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\URL;
 use App\Models\Event;
+use App\Http\Controllers\FeedbackController;
 
 // --- AUTHENTIFICATION ---
 Route::get('/register', [RegisterController::class, 'show'])->name('register');
@@ -79,3 +80,12 @@ Route::get('/admin/events/{event}/export-csv', function (Event $event) {
 
     return response()->stream($callback, 200, $headers);
 })->name('events.export');
+
+
+Route::get('/events/{event:slug}/feedback/{registration}', [FeedbackController::class, 'create'])
+    ->name('event.feedback')
+    ->middleware('signed');
+
+// 2. Traitement du formulaire (Enregistrement en base de données)
+Route::post('/events/{event:slug}/feedback/{registration}', [FeedbackController::class, 'store'])
+    ->name('event.feedback.store');
