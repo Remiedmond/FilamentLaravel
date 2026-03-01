@@ -1,37 +1,51 @@
+<div class="min-h-screen bg-[#FDFDFC] flex items-center justify-center px-6 py-20">
+    <div class="max-w-lg w-full">
 
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
-    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
-        <h1 class="text-2xl font-bold text-gray-900 mb-2">Votre avis nous intéresse !</h1>
-        <p class="text-gray-600 mb-8">Qu'avez-vous pensé de l'événement <span class="font-semibold text-blue-600">{{ $event->title }}</span> ?</p>
+        <div class="flex flex-col items-center gap-4 mb-8 text-center">
+            <span class="px-3 py-1 bg-[#87a391]/10 text-[#87a391] rounded-full text-xs font-bold uppercase tracking-widest">MyEvents</span>
+            <h2 class="text-4xl md:text-5xl font-black text-[#1b1b18] leading-tight uppercase tracking-tighter">
+                Bonjour !
+            </h2>
+        </div>
 
-        <form action="{{ route('event.feedback.store', ['event' => $event->slug, 'registration' => $registration->id]) }}" method="POST">
-            @csrf
+        <div class="bg-white p-8 md:p-10 rounded-[2.5rem] border border-[#e3e3e0]/50 shadow-sm relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-[#87a391]/5 rounded-bl-full"></div>
 
-            <div class="mb-8">
-                <label class="block text-sm font-medium text-gray-700 mb-4 text-center text-lg">Votre note</label>
-                <div class="flex justify-between items-center px-2">
-                    @foreach([1, 2, 3, 4, 5] as $i)
-                        <label class="group cursor-pointer">
-                            <input type="radio" name="rating" value="{{ $i }}" class="sr-only peer" required>
-                            <div class="w-12 h-12 flex items-center justify-center rounded-full border-2 border-gray-200 text-xl font-bold transition-all
-                                peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 group-hover:border-blue-400">
-                                {{ $i }}
-                            </div>
-                        </label>
-                    @endforeach
+            <div class="relative space-y-6">
+
+                <p class="text-[#706f6c] text-sm leading-relaxed">
+                    Merci d'avoir participé à l'événement
+                    <span class="font-black text-[#1b1b18] uppercase tracking-tight">{{ $event->title }}</span>.
+                </p>
+
+                <p class="text-[#706f6c] text-sm leading-relaxed">
+                    Votre avis est précieux pour nous aider à améliorer nos futurs événements. Pourriez-vous prendre une minute pour nous donner votre retour ?
+                </p>
+
+                <div class="flex justify-center pt-4">
+                    <a href="{{ $url }}"
+                       class="inline-flex items-center gap-2 bg-[#1b1b18] text-white font-bold uppercase tracking-widest text-xs px-10 py-5 rounded-full hover:bg-[#87a391] shadow-xl shadow-black/10 transition-all duration-300 transform hover:scale-[1.02]">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                        </svg>
+                        Donner mon avis
+                    </a>
                 </div>
-            </div>
 
-            <div class="mb-8">
-                <label for="comment" class="blocak text-sm font-medium text-gray-700 mb-2">Un petit mot ? (optionnel)</label>
-                <textarea name="comment" id="comment" rows="4"
-                    class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 bg-gray-50"
-                    placeholder="Ce que vous avez aimé ou ce qu'on peut améliorer..."></textarea>
-            </div>
+                <div class="pt-6 border-t border-[#e3e3e0]/50 flex items-center gap-3">
+                    <div class="w-8 h-8 bg-[#f2f2f0] rounded-full flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4 text-[#87a391]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-bold text-[#706f6c] uppercase tracking-widest">Merci de votre participation !</p>
+                        <p class="text-xs font-black text-[#1b1b18]">L'équipe MyEvents</p>
+                    </div>
+                </div>
 
-            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">
-                Envoyer mon avis
-            </button>
-        </form>
+            </div>
+        </div>
+
     </div>
-</body>
+</div>

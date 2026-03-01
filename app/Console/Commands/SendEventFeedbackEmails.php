@@ -2,50 +2,49 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Event;
+use App\Models\Registration;
+use App\Models\Feedback;
 use App\Mail\EventFeedbackMail;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
 
 class SendEventFeedbackEmails extends Command
 {
     /**
-     * Signature de la commande (à utiliser dans schedule).
+     * La signature de la commande (ce qu'on tape dans le terminal).
      */
     protected $signature = 'app:send-feedback-emails';
 
-    /**
-     * Description de la commande.
-     */
-    protected $description = 'Envoie des emails de demande d\'avis 24h après la fin d\'un événement';
+    protected $description = 'Envoie un email de feedback aux participants des événements terminés depuis 24h.';
 
     public function handle()
     {
-        // On cible les événements terminés hier (entre 24h et 48h)
-        $startRange = Carbon::now()->subDays(2)->startOfDay();
-        $endRange = Carbon::now()->subDay()->endOfDay();
-
-        $events = Event::query()
-            ->whereBetween('date-end', [$startRange, $endRange])
-            ->with('registrations')
-            ->get();
-
-        if ($events->isEmpty()) {
-            $this->info('Aucun événement terminé hier à traiter.');
-            return;
-        }
+        // On récupère les événements terminés (par exemple hier)
+        $events = Event::where('date-start', '<', Carbon::now())->get();
 
         foreach ($events as $event) {
-            foreach ($event->registrations as $registration) {
-                // On n'envoie que si le feedback n'existe pas encore
-                $exists = \App\Models\Feedback::where('registration_id', $registration->id)->exists();
+            // On récupère les inscriptions qui n'ont pas encore donné d'avis
+            $registrations = Registration::where('event_id', $event->id)->get();
 
-                if (!$exists) {
-                    Mail::to($registration->email)->send(new EventFeedbackMail($event, $registration));
+            foreach ($registrations as $registration) {
+                // On vérifie en BDD si un feedback existe déjà pour cette inscription
+                $alreadyHasFeedback = Feedback::where('registration_id', $registration->id)->exists();
+
+                if (!$alreadyHasFeedback) {
+                    $url = URL::temporarySignedRoute(
+                        'event.feedback',
+                        now()->addDays(7),
+                        ['event' => $event->slug, 'registration' => $registration->id]
+                    );
+
+                    Mail::to($registration->email)->send(new EventFeedbackMail($event, $registration, $url));
+
+                    $this->info("Email envoyé à : {$registration->email} pour l'événement : {$event->title}");
                 }
             }
-            $this->info("Emails envoyés pour : {$event->title}");
         }
 
         $this->info('Traitement terminé.');

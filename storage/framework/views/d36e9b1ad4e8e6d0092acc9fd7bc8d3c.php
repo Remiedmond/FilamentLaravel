@@ -47,9 +47,6 @@
                     <a href="<?php echo e(route('login')); ?>" class="text-sm font-bold uppercase tracking-widest text-[#706f6c] hover:text-[#1b1b18] transition-colors">
                         Connexion
                     </a>
-                    <a href="<?php echo e(route('register')); ?>" class="bg-[#1b1b18] text-white px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-[#87a391] transition-all duration-300 shadow-lg shadow-black/10">
-                        S'inscrire
-                    </a>
                 <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </div>
         </div>

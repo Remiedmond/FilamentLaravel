@@ -16,25 +16,21 @@ class EventFeedbackMail extends Mailable
 
     public function __construct(
         public Event $event,
-        public Registration $registration
+        public Registration $registration,
+        public string $url
     ) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Votre avis sur l\'événement : ' . $this->event->title,
+            subject: "Votre avis sur l'événement : {$this->event->title}",
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.event-feedback',
+            view: 'emails.event-feedback', // On va créer cette vue juste après
         );
-    }
-
-    public function attachments(): array
-    {
-        return [];
     }
 }
